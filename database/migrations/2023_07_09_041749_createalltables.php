@@ -77,9 +77,41 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_unit')->constrained('units', 'id');
             $table->string('title');
-            $table->string('status')->default('IN_REVIEW');
+            $table->string('status')->default('IN_REVIEW'); //IN_REVIEW - RESOLVED
             $table->date('dateCreated');
             $table->date('photos');
+        });
+
+        Schema::create('foundAndLost', function (Blueprint $table) {
+            $table->id();
+            $table->string('status')->default('LOST'); //LOST - RECOVERED
+            $table->string('photo');
+            $table->string('description');
+            $table->string('where');
+            $table->date('dateCreated');
+        });
+
+        Schema::create('areas', function (Blueprint $table) {
+            $table->id();
+            $table->integer('allowed')->default(1);
+            $table->string('title');
+            $table->string('cover');
+            $table->string('days'); //0,1,2,3,4,5,6
+            $table->time('start_time');
+            $table->time('end_time');
+        });
+
+        Schema::create('areaDisabledDays', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('id_area')->constrained('areas', 'id');
+            $table->date('day');
+        });
+
+        Schema::create('reservations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('id_unit')->constrained('units', 'id');
+            $table->foreignId('id_area')->constrained('areas', 'id');
+            $table->datetime('reservation_date');
         });
     }
 
@@ -88,6 +120,19 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('units');
+        Schema::dropIfExists('unitPeoples');
+        Schema::dropIfExists('unitVehicles');
+        Schema::dropIfExists('unitPets');
+        Schema::dropIfExists('walls');
+        Schema::dropIfExists('wallLikes');
+        Schema::dropIfExists('docs');
+        Schema::dropIfExists('billets');
+        Schema::dropIfExists('warnings');
+        Schema::dropIfExists('foundAndLost');
+        Schema::dropIfExists('areas');
+        Schema::dropIfExists('areaDisabledDays');
+        Schema::dropIfExists('reservations');
     }
 };
