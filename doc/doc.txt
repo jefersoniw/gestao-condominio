@@ -1,0 +1,10 @@
+-> Cadastro de usuários
+-> Cadastro de Unidades
+-> Cadastro de Ativos da unidade (Moradores, veículos, pets)
+-> Mural de avisos
+-> Documentos oficiais
+-> Reservas da areas comuns (Salao de festas, piscina, academia)(Lista negra de datas)
+-> Achados e perdidos
+-> Livro de ocorrências
+-> Boletos
+
