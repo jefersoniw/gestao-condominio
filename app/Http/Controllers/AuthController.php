@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\Unit;
 use App\Models\User;
@@ -72,5 +73,16 @@ class AuthController extends Controller
 
             return \response()->json($array);
         }
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $array = [
+            'error' => ''
+        ];
+
+
+
+        return $array;
     }
 }
