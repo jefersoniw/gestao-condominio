@@ -19,8 +19,8 @@ Route::get('/ping', function () {
 
 Route::get('/401', [AuthController::class, 'unauthorized'])->name('login');
 
-Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
+Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
 
 Route::middleware('auth:api')->group(function () {
 
