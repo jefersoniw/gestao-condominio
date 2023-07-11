@@ -56,11 +56,9 @@ class AuthController extends Controller
             $array['token'] = $token;
 
             $user = auth()->user();
-
             $array['user'] = $user;
 
             $properties = Unit::select(['id', 'name'])->where('id_owner', $user['id'])->get();
-
             $array['user']['properties'] = $properties;
 
             DB::commit();
@@ -81,8 +79,30 @@ class AuthController extends Controller
             'error' => ''
         ];
 
+        $cpf = str_replace(['.', '-', '/'], '', $request->cpf);
 
+        $token = auth()->attempt([
+            'cpf' => $cpf,
+            'password' => $request->password,
+        ]);
 
-        return $array;
+        if (!$token) {
+
+            $array['error'] = 'Usuário e/ou Senha Inválidos!';
+
+            return \response()->json($array);
+        }
+
+        $array['token'] = $token;
+
+        $user = auth()->user();
+        $array['user']['name'] = $user->name;
+        $array['user']['email'] = $user->email;
+        $array['user']['cpf'] = $user->cpf;
+
+        $properties = Unit::select(['id', 'name'])->where('id_owner', $user['id'])->get();
+        $array['user']['properties'] = $properties;
+
+        return response()->json($array);
     }
 }
