@@ -24,7 +24,7 @@ Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.r
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::post('/auth/validade', [AuthController::class, 'validateToken'])->name('auth.validade');
+    Route::post('/auth/validate', [AuthController::class, 'validateToken'])->name('auth.validate');
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
     //Mural de avisos

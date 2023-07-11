@@ -105,4 +105,34 @@ class AuthController extends Controller
 
         return response()->json($array);
     }
+
+    public function validateToken()
+    {
+        $array = [
+            'error' => ''
+        ];
+
+        $user = auth()->user();
+        $array['user']['name'] = $user->name;
+        $array['user']['email'] = $user->email;
+        $array['user']['cpf'] = $user->cpf;
+
+        $properties = Unit::select(['id', 'name'])->where('id_owner', $user['id'])->get();
+        $array['user']['properties'] = $properties;
+
+        return response()->json($array);
+    }
+
+    public function logout()
+    {
+        $array = [
+            'error' => ''
+        ];
+
+        auth()->logout();
+
+        $array['msg'] = 'Usuário deslogado!';
+
+        return response()->json($array);
+    }
 }
