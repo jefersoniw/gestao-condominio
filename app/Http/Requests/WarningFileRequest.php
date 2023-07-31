@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WarningRequest extends FormRequest
+class WarningFileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class WarningRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
-            'property' => 'required',
+            'photo' => 'required|file|mimes:jpg,png'
         ];
     }
 }

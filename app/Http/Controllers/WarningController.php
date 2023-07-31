@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\WarningFileRequest;
 use App\Http\Requests\WarningRequest;
 use App\Models\Unit;
 use App\Models\Warning;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -58,7 +60,7 @@ class WarningController extends Controller
         return $array;
     }
 
-    public function addWarningFile(WarningRequest $request)
+    public function addWarningFile(WarningFileRequest $request)
     {
         $array = [
             'error' => ''
@@ -68,10 +70,50 @@ class WarningController extends Controller
 
         $array['photo'] = asset(Storage::url($file));
 
-        return $array;
+        return response()->json($array);
     }
 
-    public function setWarning(Request $request)
+    public function setWarning(WarningRequest $request)
     {
+        $array = [
+            'error' => ''
+        ];
+
+        try {
+
+            $warning = new Warning();
+            $warning->id_unit = $request->property;
+            $warning->title = $request->title;
+            $warning->status = 'IN_REVIEW';
+            $warning->dateCreated = date('Y-m-d');
+
+            if ($request->list && \is_array($request->list)) {
+                $photos = [];
+
+                foreach ($request->list as $listItem) {
+                    $url = \explode('/', $listItem);
+                    $photos[] = end($url);
+                }
+
+                $warning->photos = \implode(',', $photos);
+            } else {
+                $warning->photos = '';
+            }
+
+            if (!$warning->save()) {
+                throw new Exception("erro ao salvar warning!");
+            }
+
+            $array['resultado'] = $warning;
+
+            return response()->json($array);
+        } catch (Exception $error) {
+
+            return response()->json([
+                'error' => true,
+                'error_msg' => $error->getMessage(),
+                'error_line' => $error->getLine()
+            ]);
+        }
     }
 }
