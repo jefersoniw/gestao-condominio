@@ -79,7 +79,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('status')->default('IN_REVIEW'); //IN_REVIEW - RESOLVED
             $table->date('dateCreated');
-            $table->date('photos');
+            $table->string('photos');
         });
 
         Schema::create('foundAndLost', function (Blueprint $table) {
