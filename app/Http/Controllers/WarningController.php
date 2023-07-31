@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\WarningRequest;
 use App\Models\Unit;
 use App\Models\Warning;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class WarningController extends Controller
 {
@@ -54,5 +56,22 @@ class WarningController extends Controller
 
 
         return $array;
+    }
+
+    public function addWarningFile(WarningRequest $request)
+    {
+        $array = [
+            'error' => ''
+        ];
+
+        $file = $request->photo->store('public');
+
+        $array['photo'] = asset(Storage::url($file));
+
+        return $array;
+    }
+
+    public function setWarning(Request $request)
+    {
     }
 }
