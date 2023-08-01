@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FoundAndLostRequest;
 use App\Models\FoundAndLost;
+use Exception;
 use Illuminate\Http\Request;
 
 class FoundAndLostController extends Controller
@@ -39,5 +41,38 @@ class FoundAndLostController extends Controller
         $array['recovered'] = $recovered;
 
         return response()->json($array);
+    }
+
+    public function insert(FoundAndLostRequest $request)
+    {
+        $array = [
+            'error' => ''
+        ];
+
+        try {
+            $file = $request->photo->store('public');
+            $file = \explode('public/', $file);
+            $photo = $file[1];
+
+            $lost = new FoundAndLost();
+            $lost->status = 'LOST';
+            $lost->photo = $photo;
+            $lost->description = $request->description;
+            $lost->where = $request->where;
+            $lost->dateCreated = date('Y-m-d');
+            if (!$lost->save()) {
+                throw new Exception("erro ao salvar foundandlost");
+            }
+
+            return $array['lost'] = $lost;
+        } catch (Exception $error) {
+
+            $array['error'] = [
+                'msg' => 'erro ao salvar foundandlost',
+                'msg_error' => $error->getMessage()
+            ];
+        }
+
+        return $array;
     }
 }
