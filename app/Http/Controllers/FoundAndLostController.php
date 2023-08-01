@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FoundAndLostRequest;
+use App\Http\Requests\UpdateFoundAndLostRequest;
 use App\Models\FoundAndLost;
 use Exception;
 use Illuminate\Http\Request;
@@ -67,6 +68,35 @@ class FoundAndLostController extends Controller
             return $array['lost'] = $lost;
         } catch (Exception $error) {
 
+            $array['error'] = [
+                'msg' => 'erro ao salvar foundandlost',
+                'msg_error' => $error->getMessage()
+            ];
+        }
+
+        return $array;
+    }
+
+    public function update(UpdateFoundAndLostRequest $request, FoundAndLost $foundAndLost)
+    {
+        $array = [
+            'error' => ''
+        ];
+
+        try {
+            $status = $request->status;
+
+            if (!in_array($status, ['LOST', 'RECOVERED'])) {
+                return $array['error'] = 'Status inexistente';
+            }
+
+            $foundAndLost->status = $status;
+            if (!$foundAndLost->save()) {
+                throw new Exception("erro ao atualizar status");
+            }
+
+            $array['list'] = $foundAndLost;
+        } catch (Exception $error) {
             $array['error'] = [
                 'msg' => 'erro ao salvar foundandlost',
                 'msg_error' => $error->getMessage()
