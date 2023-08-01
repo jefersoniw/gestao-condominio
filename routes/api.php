@@ -45,7 +45,7 @@ Route::middleware('auth:api')->group(function () {
     //Achados e perdidos
     Route::get('/foundAndLost', [FoundAndLostController::class, 'getAll'])->name('foundAndLost.getAll');
     Route::post('/foundAndLost', [FoundAndLostController::class, 'insert'])->name('foundAndLost.insert');
-    Route::put('/foundAndLost/{id}', [FoundAndLostController::class, 'update'])->name('foundAndLost.update');
+    Route::put('/foundAndLost/{foundAndLost}', [FoundAndLostController::class, 'update'])->name('foundAndLost.update');
 
     //Unidade
     Route::get('/unit/{id}', [UnitController::class, 'getInfo'])->name('unit.getInfo');
