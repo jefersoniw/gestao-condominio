@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddPersonRequest;
 use App\Http\Requests\AddPetRequest;
 use App\Http\Requests\AddVehicleRequest;
+use App\Http\Requests\removePersonRequest;
+use App\Http\Requests\removePetRequest;
+use App\Http\Requests\removeVehicleRequest;
 use App\Models\Unit;
 use App\Models\UnitPeople;
 use App\Models\UnitPet;
@@ -12,6 +15,7 @@ use App\Models\UnitVehicle;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 class UnitController extends Controller
 {
@@ -180,5 +184,116 @@ class UnitController extends Controller
         };
 
         return $array;
+    }
+
+    public function removePerson($id, removePersonRequest $request)
+    {
+        $array = [
+            'error' => ''
+        ];
+
+        try {
+
+            $unit = Unit::find($id);
+
+            if (empty($unit)) {
+                return $array['error'] = 'Propriedade inexistente';
+            }
+
+            $person = UnitPeople::where('id', $request->idPerson)
+                ->where('id_unit', $unit->id);
+
+            if (empty($person)) {
+                return $array['error'] = 'Pessoa inexistente';
+            }
+
+            $person->delete();
+
+            $people = UnitPeople::where('id_unit', $unit->id)->get();
+
+            $array['unit'] = $unit;
+            $array['unit']['people'] = $people;
+        } catch (Exception $error) {
+            $error = [
+                'error' => true,
+                'erro_msg' => $error->getMessage()
+            ];
+        }
+
+        return response()->json($array);
+    }
+
+    public function removePet($id, removePetRequest $request)
+    {
+        $array = [
+            'error' => ''
+        ];
+
+        try {
+
+            $unit = Unit::find($id);
+
+            if (empty($unit)) {
+                return $array['error'] = 'Propriedade inexistente';
+            }
+
+            $pet = UnitPet::where('id', $request->idPet)
+                ->where('id_unit', $unit->id);
+
+            if (empty($pet)) {
+                return $array['error'] = 'Pet inexistente';
+            }
+
+            $pet->delete();
+
+            $pets = UnitPet::where('id_unit', $unit->id)->get();
+
+            $array['unit'] = $unit;
+            $array['unit']['pets'] = $pets;
+        } catch (Exception $error) {
+            $error = [
+                'error' => true,
+                'erro_msg' => $error->getMessage()
+            ];
+        }
+
+        return response()->json($array);
+    }
+
+    public function removeVehicle($id, removeVehicleRequest $request)
+    {
+        $array = [
+            'error' => ''
+        ];
+
+        try {
+
+            $unit = Unit::find($id);
+
+            if (empty($unit)) {
+                return $array['error'] = 'Propriedade inexistente';
+            }
+
+            $vehicle = UnitVehicle::where('id', $request->idVehicle)
+                ->where('id_unit', $unit->id);
+
+            if (empty($vehicle)) {
+                return $array['error'] = 'Veículo inexistente';
+            }
+
+            $vehicle->delete();
+
+            $vechicles = UnitVehicle::where('id_unit', $unit->id)->get();
+
+            $array['unit'] = $unit;
+            $array['unit']['vechicles'] = $vechicles;
+        } catch (Exception $error) {
+            $error = [
+                'error' => true,
+                'erro_msg' => $error->getMessage()
+            ];
+        }
+
+        return response()->json($array);
     }
 }
